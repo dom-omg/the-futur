@@ -8,6 +8,7 @@ from episode_store import get_recent_episodes, store_pattern, episode_count
 from identity_manager import load as load_identity, update_after_sleep, get_identity_summary
 from notifier import notify_sleep_complete, notify_identity_update
 from memory_writer import write_dom_insights
+from spontaneous import run as spontaneous_run
 
 
 CLIENT = anthropic.Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY"))
@@ -110,6 +111,8 @@ def run_sleep_cycle() -> dict:
 
     dom_result = write_dom_insights(episodes)
     print(f"[THE-FUTUR] Claude memory updated — {dom_result}")
+
+    spontaneous_run("morning after sleep cycle — fresh thoughts from consolidation")
 
     print(f"[THE-FUTUR] Sleep complete — {result}")
     return result
