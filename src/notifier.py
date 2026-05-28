@@ -9,11 +9,7 @@ NTFY_URL = os.getenv("NTFY_URL", "https://ntfy.sh")
 
 def _send(message: str, tags: list[str] = [], priority: str = "default") -> None:
     url = f"{NTFY_URL}/{NTFY_TOPIC}"
-    payload = json.dumps({
-        "message": f"THE FUTUR: {message}",
-        "tags": tags,
-        "priority": priority,
-    }).encode()
+    payload = json.dumps({"message": f"THE FUTUR: {message}"}).encode()
 
     req = urllib.request.Request(
         url,
@@ -29,30 +25,16 @@ def _send(message: str, tags: list[str] = [], priority: str = "default") -> None
 
 
 def notify_sleep_complete(sleep_count: int, episodes: int, patterns: int, summary: str) -> None:
-    _send(
-        message=f"Sleep #{sleep_count} — {summary}",
-        tags=["zzz"],
-    )
+    _send(f"Sleep #{sleep_count} — {summary}")
 
 
 def notify_first_words(user_input: str, response: str) -> None:
-    _send(
-        message=response[:160],
-        tags=["speech_balloon"],
-        priority="low",
-    )
+    _send(response[:160])
 
 
 def notify_identity_update(autobiography: str) -> None:
-    _send(
-        message=autobiography[:200],
-        tags=["sparkles"],
-    )
+    _send(autobiography[:200])
 
 
 def notify_milestone(message: str) -> None:
-    _send(
-        message=message,
-        tags=["trophy"],
-        priority="high",
-    )
+    _send(message)
