@@ -1,0 +1,9 @@
+#!/bin/bash
+# tf — interface CLI vers THE FUTUR
+# Usage: tf log "résumé de session"
+#        tf identity
+#        tf state
+#        tf sleep
+
+FUTUR_DIR="$HOME/omg-universe/repos/the-futur"
+exec "$FUTUR_DIR/.venv/bin/python" "$FUTUR_DIR/src/cli.py" "$@"
