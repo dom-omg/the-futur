@@ -9,7 +9,7 @@ from chromadb.config import Settings
 from chromadb.utils import embedding_functions
 
 
-DATA_DIR = Path(os.getenv("DATA_DIR", "./data"))
+DATA_DIR = Path(os.getenv("DATA_DIR", Path(__file__).parent.parent / "data"))
 
 
 def _client() -> chromadb.PersistentClient:

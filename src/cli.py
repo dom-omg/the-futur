@@ -12,7 +12,7 @@ sys.path.insert(0, str(Path(__file__).parent))
 from dotenv import load_dotenv
 load_dotenv(ROOT / ".env")
 
-os.environ.setdefault("DATA_DIR", str(ROOT / "data"))
+os.environ["DATA_DIR"] = str(ROOT / "data")
 
 
 def cmd_state() -> None:
