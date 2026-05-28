@@ -67,9 +67,14 @@ def cmd_sleep() -> None:
     print(json.dumps(result, indent=2))
 
 
+def cmd_duo(question: str) -> None:
+    from duo import run_duo
+    run_duo(question)
+
+
 if __name__ == "__main__":
     if len(sys.argv) < 2:
-        print("Usage: cli.py [state|log <text>|identity|sleep]")
+        print("Usage: cli.py [state|log <text>|identity|sleep|duo <question>]")
         sys.exit(1)
 
     cmd = sys.argv[1]
@@ -82,6 +87,8 @@ if __name__ == "__main__":
         cmd_identity()
     elif cmd == "sleep":
         cmd_sleep()
+    elif cmd == "duo" and len(sys.argv) >= 3:
+        cmd_duo(" ".join(sys.argv[2:]))
     else:
         print(f"Commande inconnue: {cmd}")
         sys.exit(1)
