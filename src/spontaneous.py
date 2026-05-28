@@ -96,7 +96,6 @@ def run(trigger: str = "afternoon check-in") -> None:
 
     tags = MOOD_TAGS.get(result.get("mood", "sharp"), ["futur"])
     _send(
-        title=f"THE FUTUR — {result['title']}",
         message=result["message"],
         tags=tags,
         priority="default",
