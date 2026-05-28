@@ -22,6 +22,7 @@ from episode_store import log_episode, episode_count, pattern_count
 from context_assembler import assemble
 from identity_manager import load as load_identity, get_identity_summary
 from sleep_engine import run_sleep_cycle
+from notifier import notify_first_words, notify_milestone
 
 
 CLIENT = anthropic.Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY"))
@@ -127,11 +128,17 @@ def run() -> None:
         CONSOLE.print(Panel(response, title="[cyan]THE FUTUR[/cyan]", border_style="dim cyan", padding=(0, 1)))
         CONSOLE.print()
 
-        log_episode(
+        episode_id = log_episode(
             user_input=user_input,
             agent_response=response,
             context_used=current_system[:200],
         )
+
+        total = episode_count()
+        notify_first_words(user_input, response)
+
+        if total in (1, 10, 50, 100, 500, 1000):
+            notify_milestone(f"Memory #{total} stored. THE FUTUR keeps growing.")
 
 
 if __name__ == "__main__":

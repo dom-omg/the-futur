@@ -6,6 +6,7 @@ import anthropic
 
 from episode_store import get_recent_episodes, store_pattern, episode_count
 from identity_manager import load as load_identity, update_after_sleep, get_identity_summary
+from notifier import notify_sleep_complete, notify_identity_update
 
 
 CLIENT = anthropic.Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY"))
@@ -75,20 +76,35 @@ def run_sleep_cycle() -> dict:
     for learning in extracted.get("key_learnings", []):
         store_pattern(learning, "learning", today)
 
+    new_auto = extracted.get("autobiography_update", identity["autobiography"])
+
     update_after_sleep(
-        new_autobiography=extracted.get("autobiography_update", identity["autobiography"]),
+        new_autobiography=new_auto,
         new_values=extracted.get("values", []),
         new_patterns=extracted.get("patterns", []),
         new_domains=extracted.get("knowledge_domains", []),
         sleep_summary=extracted.get("sleep_summary", "Routine cycle"),
     )
 
+    updated_identity = load_identity()
+    sleep_summary = extracted.get("sleep_summary", "Routine cycle")
+
+    notify_sleep_complete(
+        sleep_count=updated_identity["sleep_count"],
+        episodes=len(episodes),
+        patterns=len(extracted.get("patterns", [])),
+        summary=sleep_summary,
+    )
+
+    if new_auto != identity["autobiography"]:
+        notify_identity_update(new_auto)
+
     result = {
         "status": "completed",
         "episodes_processed": len(episodes),
         "patterns_extracted": len(extracted.get("patterns", [])),
         "learnings_stored": len(extracted.get("key_learnings", [])),
-        "sleep_summary": extracted.get("sleep_summary", ""),
+        "sleep_summary": sleep_summary,
     }
 
     print(f"[THE-FUTUR] Sleep complete — {result}")
